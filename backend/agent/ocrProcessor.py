@@ -79,7 +79,7 @@ def extract_chapters_from_images(image_pages: List[Image.Image], api_key: str) -
 
     13. In multi-row tables, humans often write a single value (like a date, signature, or line) that visually spans across multiple rows to imply it applies to the entire block. If a handwritten value in a column is written only once but is sized or positioned to apply to the whole column, you MUST duplicate that exact value for EVERY row's composite key in that column. Do NOT assign it to just one row and leave the others 'EMPTY'. 
 
-    14. In the first image, there is ALWAYS a 'Prozessstufe' and 'SAP-Materialnummer' fields. Combine these fields into a LIST of tableField with the chapter_id called 'Produktinfo'. Then SKIP the entire first page and move onto the next page.
+    14. In the first image, there is ALWAYS a 'Prozessstufe', 'SAP-Materialnummer' and 'Batch No.' fields. Combine only these three fields into a LIST of tableField with the chapter_id called 'Produktinfo'. Then SKIP the entire first page and move onto the next page.
     """
     
     generation_config = types.GenerateContentConfig(
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
     API_KEY = os.getenv("GOOGLE_AI_API_KEY")
 
-    test_pdf_path = r"C:\Users\JasonBS\Desktop\small_test_2.pdf"
+    test_pdf_path = r"C:\Users\JasonBS\Desktop\final_final_test.pdf"
     
     try:
         print("1. Running PDF to Image conversion")
