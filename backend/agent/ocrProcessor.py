@@ -1,5 +1,7 @@
 import os
 import sys
+import cv2
+import numpy as np
 from typing import List, Dict
 from google import genai
 from google.genai import types
@@ -11,6 +13,32 @@ from dotenv import load_dotenv
 from schemas import PagePayload
 from pdfConverter import convert_pdf_to_images
 import json
+
+def contains_blue_handwriting(pil_image: Image.Image) -> bool:
+    """
+    Converts a PIL Image to OpenCV format in-memory and determines 
+    if it contains enough blue pen strokes to warrant processing.
+    """
+    # 1. Convert PIL image to an OpenCV numpy array (BGR format)
+    open_cv_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+    
+    # 2. Convert to HSV space
+    hsv = cv2.cvtColor(open_cv_image, cv2.COLOR_BGR2HSV)
+
+    # 3. Strict blue pen thresholds (covers light blue gel pens to dark ballpoints)
+    lower_blue = np.array([90, 40, 40])
+    upper_blue = np.array([135, 255, 255])
+
+    # 4. Create the blue color mask
+    blue_mask = cv2.inRange(hsv, lower_blue, upper_blue)
+
+    # 5. Calculate the percentage of blue pixels on the page
+    blue_pixels = cv2.countNonZero(blue_mask)
+    total_pixels = open_cv_image.shape[0] * open_cv_image.shape[1]
+    blue_percentage = (blue_pixels / total_pixels) * 100
+
+    # 6. Set a realistic threshold (0.04% of a 300 DPI page is ~3,600 small pen pixels)
+    return blue_percentage > 0.04
 
 def extract_chapters_from_images(image_pages: List[Image.Image], api_key: str) -> Dict[str, str]:
     print("function is running")
@@ -51,9 +79,7 @@ def extract_chapters_from_images(image_pages: List[Image.Image], api_key: str) -
 
     13. In multi-row tables, humans often write a single value (like a date, signature, or line) that visually spans across multiple rows to imply it applies to the entire block. If a handwritten value in a column is written only once but is sized or positioned to apply to the whole column, you MUST duplicate that exact value for EVERY row's composite key in that column. Do NOT assign it to just one row and leave the others 'EMPTY'. 
 
-    14. If the image do not contain ANY handwritten values using a BLUE PEN, then simply skip the image and process the next one. Do NOT return any data for that page.
-
-    15. In the first image, there is ALWAYS a 'Prozessstufe' and 'SAP-Materialnummer' fields. Combine these fields into a LIST of tableField with the chapter_id called 'Produktinfo'. Then SKIP the entire first page and move onto the next page.
+    14. In the first image, there is ALWAYS a 'Prozessstufe' and 'SAP-Materialnummer' fields. Combine these fields into a LIST of tableField with the chapter_id called 'Produktinfo'. Then SKIP the entire first page and move onto the next page.
     """
     
     generation_config = types.GenerateContentConfig(
@@ -66,6 +92,12 @@ def extract_chapters_from_images(image_pages: List[Image.Image], api_key: str) -
         page_num = index + 1
         print(f"Analyzing layout blocks on Page {page_num}...")
         
+        if not contains_blue_handwriting(page_image):
+            print(f"Skipping Page {page_num}: No blue handwriting detected by OpenCV.")
+            continue
+            
+        print(f"Blue handwriting found. Sending Page {page_num} to Gemini OCR Layer...")
+
         try:
             response = client.models.generate_content(
                 model='gemini-2.5-flash',
@@ -99,7 +131,7 @@ if __name__ == "__main__":
 
     API_KEY = os.getenv("GOOGLE_AI_API_KEY")
 
-    test_pdf_path = r"C:\Users\JasonBS\Desktop\final_test.pdf"
+    test_pdf_path = r"C:\Users\JasonBS\Desktop\small_test_2.pdf"
     
     try:
         print("1. Running PDF to Image conversion")
