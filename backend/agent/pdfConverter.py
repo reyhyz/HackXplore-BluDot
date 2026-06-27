@@ -23,7 +23,7 @@ def convert_pdf_to_images(pdf_path: str, target_dpi: int = 300):
     return pages
 
 if __name__ == "__main__":
-    pdf_path = r"C:\Users\JasonBS\Desktop\small_test.pdf" 
+    pdf_path = r"your path" 
     try:
         images = convert_pdf_to_images(pdf_path)
         print(f"Converted {len(images)} pages to images.")
