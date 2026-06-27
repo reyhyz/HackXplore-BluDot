@@ -1,63 +1,69 @@
-const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+/**
+ * api/client.js
+ * Talks to the FastAPI backend (main.py).
+ * 
+ */
+
+const BASE = "http://localhost:8000";
 
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE_URL}/api${path}`, {
-    headers: { "Content-Type": "application/json", ...options.headers },
-    ...options,
-  });
+  const res = await fetch(`${BASE}${path}`, options);
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(error.detail ?? "Request failed");
+    const text = await res.text().catch(() => res.statusText);
+    throw new Error(text || `HTTP ${res.status}`);
   }
+  return res;
+}
+
+/** GET /files — returns the current list of processed FileRecords */
+export async function getFiles() {
+  const res = await request("/files");
   return res.json();
 }
 
-// ── Files ─────────────────────────────────────────────────────────────────────
-
-/** GET /api/files — fetch all processed files */
-export const getFiles = () => request("/files");
-
-/** DELETE /api/files — remove all files */
-export const deleteAllFiles = () => request("/files", { method: "DELETE" });
-
-/** DELETE /api/files/{id} — remove a single file */
-export const deleteFile = (id) => request(`/files/${id}`, { method: "DELETE" });
-
-// ── Upload ────────────────────────────────────────────────────────────────────
-
 /**
- * POST /api/upload — upload one or more PDFs for digitisation.
- * @param {File[]} files - array of File objects from an <input type="file">
+ * POST /upload — send one or more PDF File objects.
+ * Returns the newly created FileRecords so the dashboard can append them.
  */
-export const uploadPDFs = (files) => {
+export async function uploadPDFs(files) {
   const form = new FormData();
-  files.forEach((f) => form.append("files", f));
-  return fetch(`${BASE_URL}/api/upload`, { method: "POST", body: form }).then((r) => {
-    if (!r.ok) throw new Error("Upload failed");
-    return r.json();
-  });
-};
+  for (const file of files) form.append("files", file);
 
-// ── Export ────────────────────────────────────────────────────────────────────
+  const res = await request("/upload", { method: "POST", body: form });
+  return res.json();
+}
+
+/** DELETE /files — wipe the in-memory store */
+export async function deleteAllFiles() {
+  await request("/files", { method: "DELETE" });
+}
 
 /**
- * GET /api/export?ids=...&filter=... — download an Excel file from the backend.
- * Falls back to a client-side CSV if you haven't wired up the endpoint yet.
+ * POST /export — triggers Excel generation on the server and downloads the file.
+ *
  * @param {"all"|"no_error"|"selected"} mode
- * @param {string[]} [ids] - required when mode === "selected"
+ * @param {string[]} fileIds  — only used when mode === "selected"
  */
-export const exportFiles = async (mode, ids = []) => {
-  const params = new URLSearchParams({ mode });
-  if (mode === "selected") ids.forEach((id) => params.append("ids", id));
+export async function exportFiles(mode, fileIds = []) {
+  const res = await request("/export", {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify({ mode, file_ids: fileIds }),
+  });
 
-  const res = await fetch(`${BASE_URL}/api/export?${params}`);
-  if (!res.ok) throw new Error("Export failed");
-
+  // Stream the .xlsx blob and prompt the browser's Save-As dialog
   const blob = await res.blob();
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement("a");
-  a.href     = url;
-  a.download = `export_${mode}.xlsx`;
+
+  // Use the filename the server suggested, or fall back to a default
+  const disposition = res.headers.get("Content-Disposition") ?? "";
+  const match       = disposition.match(/filename=([^;]+)/);
+  a.download = match ? match[1] : `batch_review_${mode}.xlsx`;
+
+  a.href = url;
+  document.body.appendChild(a);
   a.click();
+  a.remove();
   URL.revokeObjectURL(url);
-};
+}
