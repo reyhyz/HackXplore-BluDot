@@ -60,13 +60,3 @@ def get_all_values(parameter_name: str) -> List[Any]:
     return values
 
 
-# --- Quick Test Execution ---
-if __name__ == "__main__":
-    # Example: Look for 'Mixing Temperature' across all batch JSONs
-    target_param = "Mixing Temperature"
-    extracted_values = get_all_values(target_param)
-
-    print(
-        f"Collected {len(extracted_values)} entries for '{target_param}':"
-    )
-    print(extracted_values)
