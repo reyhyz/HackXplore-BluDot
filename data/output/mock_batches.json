@@ -1,0 +1,188 @@
+{
+  "clean_valid_batch": {
+    "Produktinfo": {
+      "Prozessstufe": "B20",
+      "SAP-Materialnummer": "1802072",
+      "Batch No.": "1234567"
+    },
+    "5.1": {
+      "Zyklus": "1",
+      "Soll_Zyklus": "1",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "10.06.2026 | ohe"
+    },
+    "5.2": {
+      "GMP-Bereich": "931",
+      "Virusbereich": "Ja",
+      "Soll_Virusbereich": "Pre",
+      "Hygienezone": "2",
+      "Soll_Hygienezone": "≤ 3 HZ",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "10.06.2026 | han"
+    },
+    "5.3.1": {
+      "m Tara": "100 kg",
+      "m Brutto vPZ": "300 kg",
+      "m Netto vPZ": "200 kg",
+      "V Netto vPZ": "169.5 L",
+      "Haltetemperatur": "4.2 °C",
+      "Soll_Haltetemperatur": "2 - 8 °C",
+      "LF B20-ST": "14.34 mS/cm",
+      "Soll_LF B20-ST": "2 NKS",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "10.06.2026 | han"
+    }
+  },
+  "math_error_batch": {
+    "Produktinfo": {
+      "Prozessstufe": "B20",
+      "SAP-Materialnummer": "1802072",
+      "Batch No.": "1234567"
+    },
+    "5.3.1": {
+      "m Tara": "100 kg",
+      "m Brutto vPZ": "300 kg",
+      "m Netto vPZ": "220 kg",
+      "V Netto vPZ": "236 L",
+      "Haltetemperatur": "4.2 °C",
+      "Soll_Haltetemperatur": "2 - 8 °C",
+      "LF B20-ST": "14.34 mS/cm",
+      "Soll_LF B20-ST": "2 NKS",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "10.06.2026 | han",
+      "Errors": {
+        "m Netto vPZ": "Math check failed: expected 200 kg, got 220 kg",
+        "V Netto vPZ": "Math check failed: expected 186.4 L, got 236 L"
+      }
+    }
+  },
+  "chronology_error_batch": {
+    "Produktinfo": {
+      "Prozessstufe": "B20",
+      "SAP-Materialnummer": "1802072",
+      "Batch No.": "1234567"
+    },
+    "5.2": {
+      "GMP-Bereich": "931",
+      "Virusbereich": "Ja",
+      "Soll_Virusbereich": "Pre",
+      "Hygienezone": "2",
+      "Soll_Hygienezone": "≤ 3 HZ",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "09.06.2026 | han",
+      "Errors": {
+        "Geprüft": "End date is in the past"
+      }
+    }
+  },
+  "nks_violation_batch": {
+    "Produktinfo": {
+      "Prozessstufe": "B20",
+      "SAP-Materialnummer": "1802072",
+      "Batch No.": "1234567"
+    },
+    "5.3.1": {
+      "LF B20-ST": "14.3 mS/cm",
+      "Soll_LF B20-ST": "2 NKS",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "10.06.2026 | han",
+      "Errors": {
+        "LF B20-ST": "Decimal precision check failed: expected 2 NKS, got 1 NKS"
+      }
+    }
+  },
+  "range_out_of_bounds_batch": {
+    "Produktinfo": {
+      "Prozessstufe": "B20",
+      "SAP-Materialnummer": "1802072",
+      "Batch No.": "1234567"
+    },
+    "5.2": {
+      "GMP-Bereich": "931",
+      "Virusbereich": "Ja",
+      "Soll_Virusbereich": "Pre",
+      "Hygienezone": "5",
+      "Soll_Hygienezone": "≤ 3 HZ",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "10.06.2026 | han",
+      "Errors": {
+        "Hygienezone": "Value exceeds maximum limit of 3 HZ"
+      }
+    },
+    "5.3.1": {
+      "Haltetemperatur": "12.0 °C",
+      "Soll_Haltetemperatur": "2 - 8 °C",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "10.06.2026 | han",
+      "Errors": {
+        "Haltetemperatur": "Value is outside the target range of 2 - 8 °C"
+      }
+    }
+  },
+  "missing_signature_batch": {
+    "Produktinfo": {
+      "Prozessstufe": "B20",
+      "SAP-Materialnummer": "1802072",
+      "Batch No.": "1234567"
+    },
+    "5.1": {
+      "Zyklus": "1",
+      "Soll_Zyklus": "1",
+      "Bearbeitet": "EMPTY",
+      "Geprüft": "EMPTY",
+      "Errors": {
+        "Bearbeitet": "Signature is missing",
+        "Geprüft": "Signature is missing"
+      }
+    }
+  },
+  "outlier_alert_batch": {
+    "Produktinfo": {
+      "Prozessstufe": "B20",
+      "SAP-Materialnummer": "1802072",
+      "Batch No.": "1234567"
+    },
+    "5.3.1": {
+      "LF B20-ST": "45.50 mS/cm",
+      "Soll_LF B20-ST": "2 NKS",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "10.06.2026 | han",
+      "Errors": {
+        "LF B20-ST": "Statistical outlier detected: value deviates by >3σ from baseline"
+      }
+    }
+  },
+  "illegible_value_batch": {
+    "Produktinfo": {
+      "Prozessstufe": "B20",
+      "SAP-Materialnummer": "1802072",
+      "Batch No.": "1234567"
+    },
+    "5.2": {
+      "GMP-Bereich": "931",
+      "Virusbereich": "UNCLEAR",
+      "Soll_Virusbereich": "Pre",
+      "Hygienezone": "UNCLEAR",
+      "Soll_Hygienezone": "≤ 3 HZ",
+      "Bearbeitet": "10.06.2026 | ohe",
+      "Geprüft": "10.06.2026 | han",
+      "Unclear": {
+        "Hygienezone": "Agent is unsure of this value",
+        "Virusbereich": "Agent is unsure of this value"
+      }
+    }
+  },
+  "skipped_conditional_section_batch": {
+    "Produktinfo": {
+      "Prozessstufe": "B20",
+      "SAP-Materialnummer": "1802072",
+      "Batch No.": "1234567"
+    },
+    "5.4": {
+      "Temperierung erforderlich": "Nein, Kapitel 5.4 findet keine Anwendung",
+      "Transfer aus dem Kühlraum": "N/A",
+      "Bearbeitet": "EMPTY",
+      "Geprüft": "EMPTY"
+    }
+  }
+}
