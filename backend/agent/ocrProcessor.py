@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from dotenv import load_dotenv
 from schemas import PagePayload
-from pdfConverter import convert_pdf_to_images
+from agent.pdfConverter import convert_pdf_to_images
 import json
 
 def contains_blue_handwriting(pil_image: Image.Image) -> bool:
