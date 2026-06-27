@@ -41,17 +41,19 @@ def extract_chapters_from_images(image_pages: List[Image.Image], api_key: str) -
 
     8. If multiple mutually exclusive options (e.g., both Yes and No) are checked or crossed out, append the flag 'UNCLEAR' to the value.
 
-    9. If a field includes a printed target ('Soll') value, add a new attribute to the JSON with the naming convention 'Soll_<name of the value>'. If the document provides both a fixed number and a range for a 'Soll' value, PRIORITIZE extracting the range as the target value
+    9. If a SINGLE CHECKLIST OPTION is not MARKED OR CHECKED, append the flag 'EMPTY' to the value.
 
-    10. If a chapter contains a multi-row table (e.g., an equipment list with columns like 'Anlagennummer'), DO NOT use just the column header as the field_name, or you will overwrite data.
+    10 If a field includes a printed target ('Soll') value, add a new key-value pair by naming the field_name as 'Soll_<name of the value>'. If the document provides both a fixed number and a range for a 'Soll' value, PRIORITIZE extracting the range as the target value.
 
-    11. You MUST combine the Row Name (usually the first column) and the Column Header using a hyphen to create a unique field_name. Example: For row 'Oven A' and column 'Anlagennummer', the field_name MUST be exactly 'Oven A - Anlagennummer'.
+    11. If a chapter contains a multi-row table (e.g., an equipment list with columns like 'Anlagennummer'), DO NOT use just the column header as the field_name, or you will overwrite data.
 
-    12. If a single checklist is not MARKET or CHECKED, append the flag 'EMPTY' to the value.
+    12. You MUST combine the Row Name (usually the first column) and the Column Header using a hyphen to create a unique field_name. Example: For row 'Oven A' and column 'Anlagennummer', the field_name MUST be exactly 'Oven A - Anlagennummer'.
 
     13. In multi-row tables, humans often write a single value (like a date, signature, or line) that visually spans across multiple rows to imply it applies to the entire block. If a handwritten value in a column is written only once but is sized or positioned to apply to the whole column, you MUST duplicate that exact value for EVERY row's composite key in that column. Do NOT assign it to just one row and leave the others 'EMPTY'. 
 
     14. If the image do not contain ANY handwritten values using a BLUE PEN, then simply skip the image and process the next one. Do NOT return any data for that page.
+
+    15. In the first image, there is ALWAYS a 'Prozessstufe' and 'SAP-Materialnummer' fields. Combine these fields into a LIST of tableField with the chapter_id called 'Produktinfo'. Then SKIP the entire first page and move onto the next page.
     """
     
     generation_config = types.GenerateContentConfig(
@@ -97,7 +99,7 @@ if __name__ == "__main__":
 
     API_KEY = os.getenv("GOOGLE_AI_API_KEY")
 
-    test_pdf_path = r"your path"
+    test_pdf_path = r"C:\Users\JasonBS\Desktop\final_test.pdf"
     
     try:
         print("1. Running PDF to Image conversion")
