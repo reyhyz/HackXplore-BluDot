@@ -5,3 +5,4 @@ __pycache__/
 *.pyd
 uv.lock
 .env
+poppler-26.02.0
