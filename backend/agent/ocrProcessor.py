@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
     API_KEY = os.getenv("GOOGLE_AI_API_KEY")
 
-    test_pdf_path = r"C:\Users\JasonBS\Desktop\testpdf.pdf"
+    test_pdf_path = r"your path"
     
     try:
         print("1. Running PDF to Image conversion")
