@@ -1,0 +1,61 @@
+{
+  "batch_id": "B35",
+  "document_name": "Scanned_batch_documentation.pdf",
+  "pages": [
+    {
+      "page": 1,
+      "fields": [
+        {
+          "parameter": "Process Step",
+          "value": "820"
+        },
+        {
+          "parameter": "SAP Material",
+          "value": "1802702"
+        },
+        {
+          "parameter": "Production Code",
+          "value": "475610011"
+        },
+        {
+          "parameter": "Production Code DS",
+          "value": "475610011"
+        },
+        {
+          "parameter": "Batch Number",
+          "value": "B35"
+        },
+        {
+          "parameter": "Date",
+          "value": "10.06.2020"
+        },
+        {
+          "parameter": "Batch Production Record Generated On",
+          "value": "09.06.2020"
+        }
+      ]
+    }, 
+    
+    {
+    "page": 2,
+    "fields": [
+        {
+        "parameter": "Temperature",
+        "value": 36.8,
+        "unit": "°C"
+        },
+        {
+        "parameter": "pH",
+        "value": 7.15
+        },
+        {
+        "parameter": "Mixing Time",
+        "value": 45,
+        "unit": "min"
+        }
+    ]
+    }
+  ]
+
+
+}
