@@ -24,6 +24,11 @@ The platform helps teams:
 
 Make sure the following are installed before running the project.
 
+### Mandatory Requirement (Install First)
+
+- **Poppler `release-26.02.0-0`**  
+  This must be installed before running any part of the application.
+
 ### Core Requirements
 
 - **Git** (latest stable)
@@ -32,11 +37,6 @@ Make sure the following are installed before running the project.
 - **Python 3.10+** (if backend processing services use Python)
 - **pip** (Python package manager)
 - **Docker** *(optional but recommended for consistent local environments)*
-
-### Database / Infrastructure (if used in your setup)
-
-- **PostgreSQL** or the database configured in the project
-- **Redis** *(optional, for queueing/caching if enabled)*
 
 > If your team uses a different runtime (for example only Node.js or only Python), follow the project-specific environment files and dependency manifests.
 
@@ -80,7 +80,6 @@ pip install -r requirements.txt
 Create `.env` files where required (frontend/backend) and set values such as:
 
 - API base URL
-- Database connection string
 - Authentication secrets
 - File storage paths/buckets
 
@@ -88,7 +87,6 @@ Example:
 
 ```env
 PORT=5000
-DATABASE_URL=your_database_connection
 JWT_SECRET=your_secret
 ```
 
@@ -126,16 +124,6 @@ Open the dashboard in your browser (commonly `http://localhost:3000` or `http://
 
 ---
 
-## Typical User Workflow
-
-- Open the dashboard
-- Drag and drop project/product record files
-- Wait for scan/review completion
-- Filter and inspect flagged issues
-- Export results for reporting or corrective action
-
----
-
 ## Suggested Project Structure
 
 ```text
@@ -153,20 +141,4 @@ HackXplore-BluDot/
 
 - **Dependency errors**: delete `node_modules` and reinstall with `npm install`.
 - **Port conflicts**: change `PORT` values in `.env`.
-- **Database connection issues**: verify `DATABASE_URL` and DB service status.
 - **Upload/processing failures**: check backend logs and file format constraints.
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Open a pull request
-
----
-
-## License
-
-Add your project license here (e.g., MIT License).
