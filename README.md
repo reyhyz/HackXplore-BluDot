@@ -3,12 +3,6 @@
 HackXplore-BluDot is a dashboard-based platform for **automated digitization and review of product records**.  
 Users can drop files into the dashboard, and the backend processes those records to detect and flag potential errors.
 
-The platform helps teams:
-- Upload and process product record files
-- Automatically identify record inconsistencies or errors
-- Track flagged issues in a dashboard view
-- Export functional scan/review outputs for reporting and follow-up
-
 ---
 
 ## Features
@@ -20,14 +14,10 @@ The platform helps teams:
 
 ---
 
-## Required Tech Stack
-
-Make sure the following are installed before running the project.
-
 ### Mandatory Requirement (Install First)
 
 - **Poppler `release-26.02.0-0`**  
-  This must be installed before running any part of the application.
+  This must be installed before running any part of the application to ensure PDF Reading is possible.
 
 ### Core Requirements
 
@@ -37,8 +27,6 @@ Make sure the following are installed before running the project.
 - **Python 3.10+** (if backend processing services use Python)
 - **pip** (Python package manager)
 - **Docker** *(optional but recommended for consistent local environments)*
-
-> If your team uses a different runtime (for example only Node.js or only Python), follow the project-specific environment files and dependency manifests.
 
 ---
 
@@ -77,17 +65,14 @@ pip install -r requirements.txt
 
 ### 4. Configure environment variables
 
-Create `.env` files where required (frontend/backend) and set values such as:
+Create `.env` files where required (frontend/backend) and set values of:
 
-- API base URL
-- Authentication secrets
-- File storage paths/buckets
+- API key
 
 Example:
 
 ```env
-PORT=5000
-JWT_SECRET=your_secret
+GOOGLE_AI_API_KEY=your_api_key
 ```
 
 ---
@@ -114,16 +99,6 @@ Open the dashboard in your browser (commonly `http://localhost:3000` or `http://
 
 ---
 
-## How It Works
-
-1. **Upload / Drop files** into the dashboard upload area.
-2. The **backend processes product records** and runs review logic.
-3. The system **flags detected errors** and displays them in the dashboard.
-4. Users can **track errors**, review findings, and monitor status.
-5. Users can **export functional scan outputs** for sharing and remediation workflows.
-
----
-
 ## Suggested Project Structure
 
 ```text
@@ -131,7 +106,7 @@ HackXplore-BluDot/
 ├── frontend/            # Dashboard UI
 ├── backend/             # API + processing logic
 ├── docs/                # Optional project docs
-├── .env.example         # Environment variable template
+├── .env        # Environment variable
 └── README.md
 ```
 
