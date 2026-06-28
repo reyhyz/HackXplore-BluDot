@@ -281,7 +281,7 @@ def delete_all_files():
     """Clears real uploads but preserves mock data."""
     # Re-seed so mock entries are always present after a remove-all
     _store.clear()
-    _seed_mock_data()
+    # _seed_mock_data()
     return {"deleted": True}
 
 

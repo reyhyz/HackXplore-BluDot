@@ -12,7 +12,7 @@ _UTILS_DIR = Path(__file__).resolve().parent.parent / "utils"
 if str(_UTILS_DIR) not in sys.path:
     sys.path.insert(0, str(_UTILS_DIR))
 
-from compute_statistics import get_all_values, calculate_mean, calculate_stdev  # noqa: E402
+from utils.compute_statistics import get_all_values, calculate_mean, calculate_stdev  # noqa: E402
 
 _SKIP_KEYS     = {"Errors", "Unclear"}
 _SKIP_PREFIXES = ("Soll_",)

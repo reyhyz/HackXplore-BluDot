@@ -17,7 +17,7 @@ for _p in (_UTILS_DIR, _PARSER_DIR):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from compute_statistics import get_all_values, calculate_mean, calculate_stdev  # noqa: E402
+from utils.compute_statistics import get_all_values, calculate_mean, calculate_stdev  # noqa: E402
 from textToJSON import verify_parsed_data  # noqa: E402
 
 _SKIP_KEYS     = {"Errors", "Unclear"}

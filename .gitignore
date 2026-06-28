@@ -7,3 +7,4 @@ uv.lock
 .env
 poppler-26.02.0
 frontend/node_modules/
+backend/data/outputs/—/
