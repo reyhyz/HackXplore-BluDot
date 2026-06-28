@@ -1,0 +1,83 @@
+{
+  "Produktinfo": {
+    "Prozessstufe": "B20",
+    "SAP-Materialnummer": "1802072",
+    "Batch No.": "1234567"
+  },
+  "5.1": {
+    "Production Code": "59030 123",
+    "Soll_Zyklus": "1",
+    "Zyklus": "1",
+    "Bearbeitet: (Datum/Kürzel)": "10.06.2026 | oke",
+    "Geprüft (Datum/Kürzel)": "10.06.2026 | ohe"
+  },
+  "5.2": {
+    "GMP-Bereich": "931",
+    "Soll_Virusbereich": "Pre",
+    "Virusbereich": "Ja",
+    "Soll_Hygienezone": "≤ 3",
+    "Hygienezone": "EMPTY",
+    "Bearbeitet: (Datum/Kürzel)": "10.06.2026 | ohe",
+    "Geprüft: (Datum/Kürzel)": "09.06.2026 | han",
+    "Errors": {
+      "Geprüft: (Datum/Kürzel)": "Geprüft date (09.06.2026) is before Bearbeitet date (10.06.2026) in 'Bearbeitet: (Datum/Kürzel)' — verification cannot precede processing",
+      "Hygienezone": "Field is empty — value required"
+    },
+    "Unclear": {
+      "Virusbereich": "Agent is unsure whether 'Ja' satisfies Soll value 'Pre'",
+      "Hygienezone": "Cannot compare 'EMPTY' against operator condition '≤ 3'"
+    }
+  },
+  "5.5": {
+    "Temperierung erforderlich": "Ja",
+    "Bearbeitet:": "10.06.2026 | ohe",
+    "Geprüft:": "10.06.2026 | han"
+  },
+  "5.5.1": {
+    "Intermediat": "B10-PP 13975 S 34",
+    "Transfer aus dem Kühlraum": "10.06.2026 | 13:41",
+    "Bearbeitet:": "10.06.2026 | ohe",
+    "Geprüft:": "10.06.2026 | han"
+  },
+  "5.6": {
+    "Pooling erforderlich": "Ja, weiter im Kapitel",
+    "Bearbeitet: (Datum/Kürzel)": "10.06.2026 | ohe",
+    "Geprüft: (Datum/Kürzel)": "10.06.2026 | ohe"
+  },
+  "5.6.1": {
+    "Oven A - Anlagennummer": "A1234",
+    "Oven A - Einsatzbereit gemäß RL-SOP-00796": "Ja",
+    "Oven A - Bearbeitet (Datum/Kürzel)": "EMPTY",
+    "Oven A - Geprüft (Datum/Kürzel)": "EMPTY",
+    "Batter Pump - Anlagennummer": "A4265",
+    "Batter Pump - Einsatzbereit gemäß RL-SOP-00796": "Ja",
+    "Batter Pump - Bearbeitet (Datum/Kürzel)": "EMPTY",
+    "Batter Pump - Geprüft (Datum/Kürzel)": "EMPTY",
+    "Floor Scale - Anlagennummer": "A321",
+    "Floor Scale - Einsatzbereit gemäß RL-SOP-00796": "Kein Einsatz",
+    "Floor Scale - Bearbeitet (Datum/Kürzel)": "EMPTY",
+    "Floor Scale - Geprüft (Datum/Kürzel)": "EMPTY",
+    "Bench Scale - Anlagennummer": "A45978",
+    "Bench Scale - Einsatzbereit gemäß RL-SOP-00796": "Ja",
+    "Bench Scale - Bearbeitet (Datum/Kürzel)": "EMPTY",
+    "Bench Scale - Geprüft (Datum/Kürzel)": "EMPTY",
+    "Bowl Rocker - Anlagennummer": "A32141",
+    "Bowl Rocker - Einsatzbereit gemäß RL-SOP-00796": "Ja",
+    "Bowl Rocker - Bearbeitet (Datum/Kürzel)": "EMPTY",
+    "Bowl Rocker - Geprüft (Datum/Kürzel)": "EMPTY",
+    "Errors": {
+      "Oven A - Bearbeitet (Datum/Kürzel)": "Field is empty — date and signature required",
+      "Oven A - Geprüft (Datum/Kürzel)": "Field is empty — date and signature required",
+      "Batter Pump - Bearbeitet (Datum/Kürzel)": "Field is empty — date and signature required",
+      "Batter Pump - Geprüft (Datum/Kürzel)": "Field is empty — date and signature required",
+      "Floor Scale - Bearbeitet (Datum/Kürzel)": "Field is empty — date and signature required",
+      "Floor Scale - Geprüft (Datum/Kürzel)": "Field is empty — date and signature required",
+      "Bench Scale - Bearbeitet (Datum/Kürzel)": "Field is empty — date and signature required",
+      "Bench Scale - Geprüft (Datum/Kürzel)": "Field is empty — date and signature required",
+      "Bowl Rocker - Bearbeitet (Datum/Kürzel)": "Field is empty — date and signature required",
+      "Bowl Rocker - Geprüft (Datum/Kürzel)": "Field is empty — date and signature required"
+    }
+  },
+  "sapMaterial": "1802072",
+  "processStep": "B20"
+}

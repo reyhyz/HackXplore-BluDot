@@ -1,13 +1,6 @@
 """
-jsonToExcel.py  (updated)
--------------------------
-Two additions vs the original:
-  1. output_path now accepts a str, Path, OR a file-like object (e.g. io.BytesIO)
-     so the FastAPI server can stream the file without touching disk.
-  2. Data blocks with "_section_header": True get a grey divider row instead of
-     the normal green/red colouring, making multi-batch exports readable.
+jsonToExcel.py  (backend/parser/jsonToExcel.py)
 """
-
 from __future__ import annotations
 
 import json
@@ -19,17 +12,17 @@ from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 
 
-_GREEN_FILL    = PatternFill("solid", start_color="C6EFCE")
-_RED_FILL      = PatternFill("solid", start_color="FFC7CE")
-_HEADER_FILL   = PatternFill("solid", start_color="D9E1F2")
-_META_FILL     = PatternFill("solid", start_color="F2F2F2")
-_SECTION_FILL  = PatternFill("solid", start_color="D6DCE4")   # blue-grey divider
+_GREEN_FILL   = PatternFill("solid", start_color="C6EFCE")
+_RED_FILL     = PatternFill("solid", start_color="FFC7CE")
+_HEADER_FILL  = PatternFill("solid", start_color="D9E1F2")
+_META_FILL    = PatternFill("solid", start_color="F2F2F2")
+_SECTION_FILL = PatternFill("solid", start_color="D6DCE4")
 
-_HEADER_FONT  = Font(name="Arial", bold=True,  size=10, color="1F3864")
-_BODY_FONT    = Font(name="Arial",             size=10)
-_META_FONT    = Font(name="Arial", italic=True, size=10, color="595959")
-_TITLE_FONT   = Font(name="Arial", bold=True,  size=13, color="1F3864")
-_SECTION_FONT = Font(name="Arial", bold=True,  size=10, color="374151")
+_HEADER_FONT  = Font(name="Arial", bold=True,   size=10, color="1F3864")
+_BODY_FONT    = Font(name="Arial",               size=10)
+_META_FONT    = Font(name="Arial", italic=True,  size=10, color="595959")
+_TITLE_FONT   = Font(name="Arial", bold=True,    size=13, color="1F3864")
+_SECTION_FONT = Font(name="Arial", bold=True,    size=10, color="374151")
 
 _THIN_BORDER = Border(
     left=Side(style="thin",   color="BFBFBF"),
@@ -38,13 +31,12 @@ _THIN_BORDER = Border(
     bottom=Side(style="thin", color="BFBFBF"),
 )
 
+# Page and Line columns removed
 _COLUMNS: list[tuple[str, str, int]] = [
-    ("Parameter",      "parameter",      32),
-    ("Expected Value", "expected_value", 24),
-    ("Actual Value",   "actual_value",   24),
-    ("Page",           "page_number",     8),
-    ("Line",           "line_number",     8),
-    ("Flags",          "flags",          40),
+    ("Parameter",      "parameter",      36),
+    ("Expected Value", "expected_value", 26),
+    ("Actual Value",   "actual_value",   26),
+    ("Flags",          "flags",          44),
     ("Status",         "status",         14),
 ]
 
@@ -54,10 +46,10 @@ def _flags_to_str(flags: dict) -> str:
 
 
 def _write_meta_block(ws, meta: dict[str, str]) -> int:
-    ws.merge_cells("A1:G1")
+    ws.merge_cells(f"A1:{get_column_letter(len(_COLUMNS))}1")
     c = ws["A1"]
-    c.value = "Batch Review Report"
-    c.font  = _TITLE_FONT
+    c.value     = "Batch Review Report"
+    c.font      = _TITLE_FONT
     c.alignment = Alignment(horizontal="left", vertical="center")
     ws.row_dimensions[1].height = 22
 
@@ -65,13 +57,13 @@ def _write_meta_block(ws, meta: dict[str, str]) -> int:
     for key, value in meta.items():
         for col, val in ((1, key), (2, value)):
             cell = ws.cell(row=row, column=col, value=val)
-            cell.fill = _META_FILL
-            cell.font = _META_FONT
+            cell.fill      = _META_FILL
+            cell.font      = _META_FONT
             cell.alignment = Alignment(vertical="center")
         ws.row_dimensions[row].height = 16
         row += 1
 
-    row += 1   # blank spacer
+    row += 1
     return row
 
 
@@ -87,7 +79,6 @@ def _write_header_row(ws, row: int) -> None:
 
 
 def _write_section_header_row(ws, row: int, label: str) -> None:
-    """Grey divider row used between batches in a multi-batch export."""
     ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=len(_COLUMNS))
     cell = ws.cell(row=row, column=1, value=label)
     cell.fill      = _SECTION_FILL
@@ -106,8 +97,6 @@ def _write_data_row(ws, row: int, block: dict[str, Any]) -> None:
         block.get("parameter",      ""),
         block.get("expected_value", ""),
         block.get("actual_value",   ""),
-        block.get("page_number",    ""),
-        block.get("line_number",    ""),
         _flags_to_str(flags),
         status_text,
     ]
@@ -119,28 +108,17 @@ def _write_data_row(ws, row: int, block: dict[str, Any]) -> None:
         cell.fill      = row_fill
         cell.font      = _BODY_FONT
         cell.border    = _THIN_BORDER
-        cell.alignment = Alignment(
-            vertical="top",
-            wrap_text=True,
-            horizontal="center" if col_idx in (4, 5) else "left",
-        )
+        cell.alignment = Alignment(vertical="top", wrap_text=True, horizontal="left")
 
     ws.row_dimensions[row].height = row_height
 
 
 def export_to_excel(
-    data_blocks:  list[dict[str, Any]],
-    output_path:  Union[str, Path, IO[bytes]] = "batch_review.xlsx",
-    sheet_name:   str = "Batch Review",
-    batch_meta:   dict[str, str] | None = None,
+    data_blocks: list[dict[str, Any]],
+    output_path: Union[str, Path, IO[bytes]] = "batch_review.xlsx",
+    sheet_name:  str = "Batch Review",
+    batch_meta:  dict[str, str] | None = None,
 ) -> Union[Path, None]:
-    """
-    Export data_blocks to Excel.
-
-    output_path can be:
-      - a str / Path  →  writes to disk, returns the Path
-      - a file-like   →  writes into the buffer (e.g. io.BytesIO), returns None
-    """
     is_filelike = hasattr(output_path, "write")
 
     if not is_filelike:
@@ -157,10 +135,10 @@ def export_to_excel(
         next_row = _write_meta_block(ws, batch_meta)
 
     _write_header_row(ws, next_row)
-    freeze_at = next_row + 1       # freeze everything above the first data row
+    freeze_at = next_row + 1
     next_row += 1
 
-    real_data_blocks = []          # exclude section headers from summary count
+    real_data_blocks = []
 
     for block in data_blocks:
         if block.get("_section_header"):
@@ -176,8 +154,8 @@ def export_to_excel(
     flag_count = total - ok_count
 
     ws.cell(row=next_row, column=1, value="SUMMARY").font = _HEADER_FONT
-    ws.cell(row=next_row, column=2, value=f"Total: {total}").font   = _BODY_FONT
-    ws.cell(row=next_row, column=3, value=f"OK: {ok_count}").font   = Font(name="Arial", size=10, color="375623")
+    ws.cell(row=next_row, column=2, value=f"Total: {total}").font     = _BODY_FONT
+    ws.cell(row=next_row, column=3, value=f"OK: {ok_count}").font     = Font(name="Arial", size=10, color="375623")
     ws.cell(row=next_row, column=4, value=f"Issues: {flag_count}").font = Font(name="Arial", size=10, color="9C0006")
 
     for col in range(1, len(_COLUMNS) + 1):
