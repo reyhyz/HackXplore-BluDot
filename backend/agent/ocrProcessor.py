@@ -6,6 +6,7 @@ from typing import List, Dict
 from google import genai
 from google.genai import types
 from PIL import Image, ImageDraw
+import time
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -121,6 +122,8 @@ def extract_chapters_from_images(image_pages: List[Image.Image], api_key: str) -
         except Exception as e:
             print(f"⚠️ Error reading Page {page_num}: {e}")
             continue
+
+        time.sleep(3)
             
     return master_chapters_dataset
 
